@@ -1,0 +1,270 @@
+<style>
+  .our-projects {
+    max-width: 1920px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .our-projects .our-project--heading {
+    font-family: "Noto Sans", serif;
+    font-size: 54px;
+    font-weight: 700;
+    color: #283cff;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .cat {
+    display: flex;
+    gap: 10px;
+  }
+
+  .category-block {
+    padding: 8px;
+    border: solid black;
+    border-radius: 50px;
+    text-align: center;
+    background-color: #f9f9f9;
+    font-family: "Noto Sans", serif;
+    font-size: 14px;
+  }
+
+  .projects-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+  }
+
+  .left-column,
+  .right-column {
+    flex: 1;
+  }
+
+  .project-block {
+    border: solid #040404;
+    border-radius: 20px;
+    padding: 10px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9f9f9;
+  }
+
+  .project-block img {
+    width: 600px;
+    max-width: 100%;
+    border-radius: 20px;
+    transition: transform 0.3s ease;
+  }
+
+  .project-block img:hover {
+    transform: scale(0.95);
+  }
+
+  .project-heading {
+    font-family: "Noto Sans", serif;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 10px 0;
+    justify-content: center;
+  }
+
+  .project-details {
+    font-family: "Noto Sans", serif;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .project-tag {
+    display: inline-block;
+    background-color: #d5d6df;
+    color: #333;
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 15px;
+    font-size: 14px;
+    font-family: "Noto Sans", serif;
+  }
+  .see-details-section {
+    text-align: left;
+    }
+
+
+  .see-details-link {
+    font-family: "Noto Sans", serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: #283cff;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #f1f1f1;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin-top: 10px;
+    display: inline-block;
+    justify-content: center;
+  }
+
+  .see-details-link:hover {
+    background-color: #283cff;
+    color: #ffffff;
+  }
+
+  @media screen and (max-width: 800px) {
+    .projects-container {
+      flex-direction: column;
+    }
+
+    .left-column,
+    .right-column {
+      width: 100%;
+    }
+  }
+</style>
+
+<div class="our-projects">
+  <h1 class="our-project--heading">{{ section.settings['our-project--heading'] }}</h1>
+
+  <div class="cat">
+    {% for block in section.blocks %}
+      {% if block.type == 'category' %}
+        <div class="category-block">
+          <h2>{{ block.settings['category-name'] }}</h2>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <div class="projects-container">
+    <div class="left-column">
+      {% for block in section.blocks %}
+        {% if block.type == 'image_text' %}
+          {% assign is_even = forloop.index0 | modulo: 2 %}
+          {% if is_even == 0 %}
+            <div class="project-block">
+              <div class="image-section">
+                <img
+                  src="{{ block.settings['projects_image'] | image_url }}"
+                  alt="Project Image"
+                >
+              </div>
+              <div class="text-section">
+                <h2 class="project-heading">{{ block.settings['projects_heading'] }}</h2>
+                <p class="project-details">{{ block.settings['projects_details'] }}</p>
+                {% assign tags = block.settings['project-tag'] | split: ', ' %}
+                {% for tag in tags %}
+                  <p class="project-tag">{{ tag }}</p>
+                {% endfor %}
+
+                  <div class="see-details-section">
+                  <a href="{{ block.settings['projects_url'] }}" target="_blank" class="see-details-link">See Details</a>
+                  </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="right-column">
+      {% for block in section.blocks %}
+        {% if block.type == 'image_text' %}
+          {% assign is_odd = forloop.index0 | modulo: 2 %}
+          {% if is_odd != 0 %}
+            <div class="project-block">
+              <div class="image-section">
+                <img
+                  src="{{ block.settings['projects_image'] | image_url }}"
+                  alt="Project Image"
+                >
+              </div>
+              <div class="text-section">
+                <h2 class="project-heading">{{ block.settings['projects_heading'] }}</h2>
+                <p class="project-details">{{ block.settings['projects_details'] }}</p>
+
+                {% assign tags = block.settings['project-tag'] | split: ', ' %}
+                {% for tag in tags %}
+                  <p class="project-tag">{{ tag }}</p>
+                {% endfor %}
+
+                  <div class="see-details-section">
+                  <a href="{{ block.settings['projects_url'] }}" target="_blank" class="see-details-link">See Details</a>
+                  </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+
+{% schema %}
+ {
+   "name": "our-projects",
+   "settings": [
+     {
+       "type": "text",
+       "id": "our-project--heading",
+       "label": "Enter heading here",
+       "default": "We love Shopify. Our customers do too."
+     }
+   ],
+"blocks": [
+   {
+     "type": "image_text",
+     "name": "our-projects_block",
+     "settings": [
+       {
+         "type": "text",
+         "id": "projects_heading",
+         "label": "Enter heading"
+       },
+       {
+         "type": "text",
+         "id": "projects_details",
+         "label": "Enter details here"
+       },
+       {
+         "type": "image_picker",
+         "id": "projects_image",
+         "label": "Select/upload Image"
+       },
+       {
+         "type": "url",
+         "id": "projects_url",
+         "label": "Enter URL"
+       },
+         {
+           "type": "textarea",
+           "id": "project-tag",
+           "label": "Enter tag:"
+         }
+     ]
+   },
+   {
+     "type": "category",
+     "name": "our-projects--category",
+     "settings": [
+       {
+         "type": "text",
+         "id": "category-name",
+         "label": "Enter category"
+       }
+     ]
+   },
+ ],
+   "presets": [
+     {
+       "name": "our-projects"
+     }
+   ]
+ }
+{% endschema %}
